@@ -547,6 +547,192 @@ input, select, textarea { font-family: inherit; }
     animation: scrollLine 2s ease-in-out infinite;
 }
 
+/* --- Hero Particle Canvas --- */
+.hero-particles {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.6;
+}
+
+/* --- Hero Animated Grid --- */
+.hero-grid {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+        linear-gradient(rgba(13, 255, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(13, 255, 241, 0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 20%, transparent 100%);
+    animation: gridDrift 20s linear infinite;
+}
+@keyframes gridDrift {
+    0%   { background-position: 0 0, 0 0; }
+    100% { background-position: 60px 60px, 60px 60px; }
+}
+
+/* --- Floating Metric Badges --- */
+@keyframes floatBadge1 {
+    0%, 100% { transform: translateY(0px) rotate(-2deg); }
+    50%       { transform: translateY(-14px) rotate(1deg); }
+}
+@keyframes floatBadge2 {
+    0%, 100% { transform: translateY(0px) rotate(2deg); }
+    50%       { transform: translateY(-10px) rotate(-1deg); }
+}
+@keyframes floatBadge3 {
+    0%, 100% { transform: translateY(0px) rotate(1deg); }
+    50%       { transform: translateY(-16px) rotate(-2deg); }
+}
+@keyframes floatBadge4 {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); }
+    50%       { transform: translateY(-12px) rotate(2deg); }
+}
+@keyframes badgePulse {
+    0%, 100% { transform: scale(1); opacity: 0.6; }
+    50%       { transform: scale(1.8); opacity: 0; }
+}
+
+.hero-image-wrapper {
+    overflow: visible !important;
+}
+
+.hero-float-badge {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    cursor: default;
+    z-index: 10;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    white-space: nowrap;
+}
+.hero-float-badge:hover {
+    box-shadow: 0 12px 40px rgba(13, 255, 241, 0.2);
+    border-color: rgba(13, 255, 241, 0.35);
+}
+
+.float-badge-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+    border-radius: 10px;
+    color: var(--color-accent);
+    flex-shrink: 0;
+}
+
+.float-badge-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.float-badge-value {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--color-accent);
+    line-height: 1.1;
+}
+
+.float-badge-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    line-height: 1.2;
+}
+
+.float-badge-pulse {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+}
+.float-badge-pulse::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: var(--color-accent);
+    animation: badgePulse 2s ease-out infinite;
+}
+
+/* Badge positions */
+.hero-float-1 {
+    top: -20px;
+    right: -24px;
+    animation: floatBadge1 5s ease-in-out infinite;
+}
+.hero-float-2 {
+    bottom: 40px;
+    right: -30px;
+    animation: floatBadge2 6s ease-in-out infinite 0.5s;
+}
+.hero-float-3 {
+    top: 60px;
+    left: -36px;
+    animation: floatBadge3 5.5s ease-in-out infinite 1s;
+}
+.hero-float-4 {
+    bottom: -18px;
+    left: 20px;
+    animation: floatBadge4 7s ease-in-out infinite 0.3s;
+}
+
+[dir="ltr"] .hero-float-1 { right: auto; left: -24px; }
+[dir="ltr"] .hero-float-2 { right: auto; left: -30px; }
+[dir="ltr"] .hero-float-3 { left: auto; right: -36px; }
+[dir="ltr"] .hero-float-4 { left: auto; right: 20px; }
+
+/* --- Hero Ring Decorations --- */
+@keyframes ringRotate {
+    from { transform: translateX(-50%) rotate(0deg); }
+    to   { transform: translateX(-50%) rotate(360deg); }
+}
+@keyframes ringRotateRev {
+    from { transform: translateX(-50%) rotate(0deg); }
+    to   { transform: translateX(-50%) rotate(-360deg); }
+}
+
+.hero-ring {
+    position: absolute;
+    border-radius: 50%;
+    border: 1.5px dashed rgba(13, 255, 241, 0.18);
+    pointer-events: none;
+    left: 50%;
+    top: 50%;
+}
+
+.hero-ring-1 {
+    width: 110%;
+    padding-bottom: 110%;
+    margin-top: -55%;
+    animation: ringRotate 25s linear infinite;
+}
+
+.hero-ring-2 {
+    width: 130%;
+    padding-bottom: 130%;
+    margin-top: -65%;
+    border-color: rgba(69, 104, 130, 0.15);
+    animation: ringRotateRev 40s linear infinite;
+}
+
 /* --- Sections --- */
 .section {
     padding: 100px 0;

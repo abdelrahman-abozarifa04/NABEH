@@ -361,4 +361,118 @@ document.addEventListener('DOMContentLoaded', () => {
     // ============ INITIAL STATE ============
     // Apply initial language (Arabic by default)
     applyLanguage('ar');
+
+    // ============ PARTICLE CANVAS ============
+    (function initParticles() {
+        const canvas = document.getElementById('hero-canvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        let W, H, particles = [], mouse = { x: -9999, y: -9999 };
+        const COUNT = 55;
+
+        function resize() {
+            W = canvas.width  = canvas.offsetWidth;
+            H = canvas.height = canvas.offsetHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        canvas.parentElement.addEventListener('mousemove', (e) => {
+            const rect = canvas.getBoundingClientRect();
+            mouse.x = e.clientX - rect.left;
+            mouse.y = e.clientY - rect.top;
+        });
+        canvas.parentElement.addEventListener('mouseleave', () => {
+            mouse.x = -9999; mouse.y = -9999;
+        });
+
+        function getAccentColor() {
+            return document.documentElement.getAttribute('data-theme') === 'dark'
+                ? '13, 255, 241' : '35, 76, 106';
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x  = Math.random() * W;
+                this.y  = Math.random() * H;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.r  = Math.random() * 2 + 1;
+                this.alpha = Math.random() * 0.4 + 0.2;
+            }
+            update() {
+                // Mouse repulsion
+                const dx = this.x - mouse.x, dy = this.y - mouse.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 100) {
+                    const force = (100 - dist) / 100;
+                    this.x += (dx / dist) * force * 2;
+                    this.y += (dy / dist) * force * 2;
+                }
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > W) this.vx *= -1;
+                if (this.y < 0 || this.y > H) this.vy *= -1;
+            }
+            draw(color) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${color}, ${this.alpha})`;
+                ctx.fill();
+            }
+        }
+
+        for (let i = 0; i < COUNT; i++) particles.push(new Particle());
+
+        function drawLines(color) {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const d  = Math.sqrt(dx * dx + dy * dy);
+                    if (d < 120) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(${color}, ${0.12 * (1 - d / 120)})`;
+                        ctx.lineWidth = 1;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, W, H);
+            const color = getAccentColor();
+            particles.forEach(p => { p.update(); p.draw(color); });
+            drawLines(color);
+            requestAnimationFrame(animate);
+        }
+        animate();
+    })();
+
+    // ============ HERO IMAGE TILT ============
+    (function initTilt() {
+        const heroImg = document.querySelector('.hero-image');
+        const wrapper = document.querySelector('.hero-image-wrapper');
+        if (!heroImg || !wrapper) return;
+
+        heroImg.addEventListener('mousemove', (e) => {
+            const rect = heroImg.getBoundingClientRect();
+            const cx = rect.width / 2, cy = rect.height / 2;
+            const x = e.clientX - rect.left - cx;
+            const y = e.clientY - rect.top  - cy;
+            const rotX = (-y / cy) * 6;
+            const rotY = ( x / cx) * 6;
+            wrapper.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) scale(1.02)`;
+            wrapper.style.transition = 'transform 0.1s ease';
+        });
+
+        heroImg.addEventListener('mouseleave', () => {
+            wrapper.style.transform = 'perspective(800px) rotateX(0deg) rotateY(0deg) scale(1)';
+            wrapper.style.transition = 'transform 0.6s ease';
+        });
+    })();
 });
