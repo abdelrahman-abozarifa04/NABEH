@@ -2,7 +2,7 @@
 
 <img src="LOGO white_theme.png.png" alt="NABEH Logo" height="80" />
 
-# NABEH — نابة
+# NABEH — نابية
 ### Smart Education Assist | مساعد التعليم الذكي
 
 **An AI-powered EdTech SaaS landing page for the future of education.**  
